@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String
-  password   String
-  role       Role     @default(customer)
-  contactNo  String
-  address    String
-  profileImg String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id               String            @id @default(uuid())
+  name             String
+  email            String
+  password         String
+  role             Role              @default(customer)
+  contactNo        String
+  address          String
+  profileImg       String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  reviewAndRatings ReviewAndRating[]
 
   @@map("users")
 }
@@ -29,6 +30,8 @@ model Category {
   id    String @id @default(uuid())
   title String
   books Book[]
+
+  @@map("categories")
 }
 
 model Book {
@@ -39,8 +42,24 @@ model Book {
   genre          String
   publicatioDate DateTime
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId       String
+  category         Category          @relation(fields: [categoryId], references: [id])
+  reviewAndRatings ReviewAndRating[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("review_and_ratings")
 }
 
 enum Role {
