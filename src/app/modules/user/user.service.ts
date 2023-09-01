@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Prisma, User } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import {
@@ -14,7 +13,7 @@ import { IUserFilterRequest } from './user.interface';
 const getAllFromDB = async (
   filters: IUserFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<User[]>> => {
+): Promise<any> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
@@ -64,6 +63,17 @@ const getAllFromDB = async (
         : {
             createdAt: 'desc',
           },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   const total = await prisma.user.count({
     where: whereConditions,
