@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "W:\\PH-NextLevel\\Lit-library\\logs\\winston\\errors\\.13974cffcbfcf9d6d8dba5d07107ef439b062f8e-audit.json",
+    "files": [
+        {
+            "date": 1693537140300,
+            "name": "W:\\PH-NextLevel\\Lit-library\\logs\\winston\\errors\\phu-2023-01-09-08-error.log",
+            "hash": "dc9f401a03da7384bec42da2a2650bbe807e45af0b99b179d4caa05ee2f2753f"
+        },
+        {
+            "date": 1693537310874,
+            "name": "W:\\PH-NextLevel\\Lit-library\\logs\\winston\\errors\\phu-2023-01-09-09-error.log",
+            "hash": "99db20a62c42acbf019608d9628a6fe85d59b8c3f90fcad316cd43b243fa42b2"
+        },
+        {
+            "date": 1693541271533,
+            "name": "W:\\PH-NextLevel\\Lit-library\\logs\\winston\\errors\\phu-2023-01-09-10-error.log",
+            "hash": "d09c554b666f7000da6ccafde6e6a9681e55c61bf1ec13ccb04ca38430a67d44"
+        },
+        {
+            "date": 1693544592957,
+            "name": "W:\\PH-NextLevel\\Lit-library\\logs\\winston\\errors\\phu-2023-01-09-11-error.log",
+            "hash": "bad7b2e55dcd251d7308837ee0703ae6a823d43d6af2222bb5818dfc1afe1bec"
+        }
+    ],
+    "hashType": "sha256"
+}
