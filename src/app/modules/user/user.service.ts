@@ -146,7 +146,7 @@ const deleteFromDB = async (id: string): Promise<User> => {
 const getMyProfile = async (verifiedUser: any): Promise<User | null> => {
   const result = await prisma.user.findUnique({
     where: {
-      id: verifiedUser?.id,
+      id: verifiedUser?.userId,
     },
   });
 
