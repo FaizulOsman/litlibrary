@@ -1,13 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 
 const insertIntoDB = async (payload: User): Promise<any> => {
-  const result = await prisma.user.create({ data: payload });
-  // console.log(password);
+  // Hash the password before saving it in the database
+  const hashedPassword = await bcrypt.hash(payload.password, 10); // Adjust the salt rounds as needed
+
+  const userDataWithHashedPassword = {
+    ...payload,
+    password: hashedPassword,
+  };
+
+  const { password, ...result } = await prisma.user.create({
+    data: userDataWithHashedPassword,
+  });
+  // const { password, ...result } = await prisma.user.create({ data: payload });
+  console.log(password);
 
   let accessToken;
   let refreshToken;
@@ -19,7 +31,7 @@ const insertIntoDB = async (payload: User): Promise<any> => {
         iat: 1516239022,
       },
       config.jwt.secret as Secret,
-      '1d' // Set a default expiration of 1 day (you can adjust this as needed)
+      '1d'
     );
 
     refreshToken = jwtHelpers.createToken(
@@ -29,10 +41,9 @@ const insertIntoDB = async (payload: User): Promise<any> => {
         iat: 1516239022,
       },
       config.jwt.refresh_secret as Secret,
-      '7d' // Set a default refresh token expiration of 7 days (you can adjust this as needed)
+      '7d'
     );
   }
-  console.log(accessToken);
 
   return { result, refreshToken, accessToken };
 };
