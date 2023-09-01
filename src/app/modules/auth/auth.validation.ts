@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const SignUp = z.object({
+const signUp = z.object({
   body: z.object({
     name: z.string({
       required_error: 'Name is required',
@@ -28,6 +28,18 @@ const SignUp = z.object({
   }),
 });
 
+const login = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: 'Email is required',
+    }),
+    password: z.string({
+      required_error: 'Password is required',
+    }),
+  }),
+});
+
 export const AuthValidation = {
-  SignUp,
+  signUp,
+  login,
 };

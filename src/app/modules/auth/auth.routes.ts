@@ -8,8 +8,14 @@ const router = Router();
 // Routes
 router.post(
   '/signup',
-  validateRequest(AuthValidation.SignUp),
-  AuthController.insertIntoDB
+  validateRequest(AuthValidation.signUp),
+  AuthController.signUp
+);
+
+router.post(
+  '/signin',
+  validateRequest(AuthValidation.login),
+  AuthController.login
 );
 
 export const AuthRoutes = router;
