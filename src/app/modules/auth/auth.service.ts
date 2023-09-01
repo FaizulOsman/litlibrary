@@ -70,9 +70,9 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
   // Generate JWT tokens
   const accessToken = jwtHelpers.createToken(
     {
-      id: user.id,
       role: user.role,
-      email: user.email,
+      userId: user.id,
+      iat: 1516239022,
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -80,9 +80,9 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
 
   const refreshToken = jwtHelpers.createToken(
     {
-      id: user.id,
       role: user.role,
-      email: user.email,
+      userId: user.id,
+      iat: 1516239022,
     },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
