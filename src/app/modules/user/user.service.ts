@@ -113,12 +113,23 @@ const getByIdFromDB = async (id: string): Promise<any> => {
 const updateIntoDB = async (
   id: string,
   payload: Partial<User>
-): Promise<User> => {
+): Promise<any> => {
   const result = await prisma.user.update({
     where: {
       id,
     },
     data: payload,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   return result;
 };

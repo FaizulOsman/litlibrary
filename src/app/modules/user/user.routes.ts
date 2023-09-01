@@ -9,7 +9,7 @@ const router = Router();
 router.get('/', auth(ENUM_USER_ROLE.ADMIN), UserController.getAllFromDB);
 router.get('/profile', UserController.getMyProfile);
 router.get('/:id', auth(ENUM_USER_ROLE.ADMIN), UserController.getByIdFromDB);
-router.patch('/:id', UserController.updateIntoDB);
+router.patch('/:id', auth(ENUM_USER_ROLE.ADMIN), UserController.updateIntoDB);
 router.delete('/:id', UserController.deleteFromDB);
 
 export const UserRoutes = router;
