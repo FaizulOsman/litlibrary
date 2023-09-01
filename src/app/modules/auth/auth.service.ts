@@ -24,6 +24,10 @@ const signUp = async (payload: User): Promise<any> => {
   // const { password, ...result } = await prisma.user.create({ data: payload });
   console.log(password);
 
+  const now = Math.floor(Date.now() / 1000); // Current time in seconds
+  const oneYearInSeconds = 31536000; // Number of seconds in one year
+  const iatForOneYear = now + oneYearInSeconds; // Calculate the iat value for one year from now
+
   let accessToken;
   let refreshToken;
   if (result) {
@@ -31,20 +35,20 @@ const signUp = async (payload: User): Promise<any> => {
       {
         role: result.role,
         userId: result.id,
-        iat: 1516239022,
+        iat: iatForOneYear,
       },
       config.jwt.secret as Secret,
-      '1d'
+      '365d'
     );
 
     refreshToken = jwtHelpers.createToken(
       {
         role: result.role,
         userId: result.id,
-        iat: 1516239022,
+        iat: iatForOneYear,
       },
       config.jwt.refresh_secret as Secret,
-      '7d'
+      '365d'
     );
   }
 
@@ -67,12 +71,16 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid password');
   }
 
+  const now = Math.floor(Date.now() / 1000); // Current time in seconds
+  const oneYearInSeconds = 31536000; // Number of seconds in one year
+  const iatForOneYear = now + oneYearInSeconds; // Calculate the iat value for one year from now
+
   // Generate JWT tokens
   const accessToken = jwtHelpers.createToken(
     {
       role: user.role,
       userId: user.id,
-      iat: 1516239022,
+      iat: iatForOneYear,
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -82,7 +90,7 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
     {
       role: user.role,
       userId: user.id,
-      iat: 1516239022,
+      iat: iatForOneYear,
     },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string

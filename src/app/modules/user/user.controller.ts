@@ -17,7 +17,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Users fetched successfully',
+    message: 'Users retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
@@ -68,7 +68,7 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User fetched successfully',
+    message: 'User retrieved successfully',
     data: result,
   });
 });
