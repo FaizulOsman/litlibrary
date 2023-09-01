@@ -2,8 +2,9 @@
 import { User } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 
-const insertIntoDB = async (data: User): Promise<User> => {
-  const result = await prisma.user.create({ data });
+const insertIntoDB = async (data: User): Promise<any> => {
+  const { password, ...result } = await prisma.user.create({ data });
+  console.log(password);
 
   return result;
 };
