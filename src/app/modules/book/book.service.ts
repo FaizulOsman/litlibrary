@@ -45,7 +45,7 @@ const getAllFromDB = async (
   filters: IBookFilterRequest,
   options: IPaginationOptions
 ): Promise<any> => {
-  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+  const { size, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
   const andConditions = [];
@@ -87,7 +87,7 @@ const getAllFromDB = async (
   const result = await prisma.book.findMany({
     where: whereConditions,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
@@ -98,12 +98,14 @@ const getAllFromDB = async (
   const total = await prisma.book.count({
     where: whereConditions,
   });
+  const totalPage = Math.ceil(total / size);
 
   return {
     meta: {
       total,
       page,
-      limit,
+      size,
+      totalPage,
     },
     data: result,
   };

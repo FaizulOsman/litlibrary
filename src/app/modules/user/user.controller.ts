@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
-  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const options = pick(req.query, ['size', 'page', 'sortBy', 'sortOrder']);
   const result = await UserService.getAllFromDB(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
