@@ -183,15 +183,6 @@ const updateIntoDB = async (
   id: string,
   payload: Partial<Book>
 ): Promise<any> => {
-  const isExist = await prisma.book.findFirst({
-    where: {
-      title: payload.title,
-    },
-  });
-  if (isExist) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Title already exist');
-  }
-
   const result = await prisma.book.update({
     where: {
       id,
