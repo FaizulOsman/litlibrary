@@ -24,7 +24,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Categories retrieved successfully',
+    message: 'Book retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
@@ -40,7 +40,7 @@ const getBooksByCategory: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Books retrived successfully',
+    message: 'Books retrieved successfully',
     data: result,
   });
 });
