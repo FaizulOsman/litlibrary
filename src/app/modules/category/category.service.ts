@@ -80,6 +80,9 @@ const getAllFromDB = async (
         : {
             createdAt: 'desc',
           },
+    include: {
+      books: true,
+    },
   });
   const total = await prisma.category.count({
     where: whereConditions,
@@ -100,6 +103,9 @@ const getByIdFromDB = async (id: string): Promise<any> => {
     where: {
       id,
     },
+    include: {
+      books: true,
+    },
   });
 
   return result;
@@ -109,6 +115,15 @@ const updateIntoDB = async (
   id: string,
   payload: Partial<Category>
 ): Promise<any> => {
+  const isExist = await prisma.category.findFirst({
+    where: {
+      title: payload.title,
+    },
+  });
+  if (isExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Title already exist');
+  }
+
   const result = await prisma.category.update({
     where: {
       id,
