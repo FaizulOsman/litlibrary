@@ -1,7 +1,9 @@
 export type IBookFilterRequest = {
-  searchTerm?: string | undefined;
+  search?: string | undefined;
   title?: string | undefined;
   author?: string | undefined;
-  genre?: string | undefined;
+  category?: string | undefined;
   price?: number | undefined;
+  minPrice?: string | undefined;
+  maxPrice?: string | undefined;
 };
