@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
@@ -27,6 +27,21 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     message: 'Categories retrieved successfully',
     meta: result.meta,
     data: result.data,
+  });
+});
+
+const getBooksByCategory: RequestHandler = catchAsync(async (req, res) => {
+  const options = pick(req.query, ['size', 'page', 'sortBy', 'sortOrder']);
+  const result = await BookService.getBooksByCategory(
+    req.params.categoryId,
+    options
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Books retrived successfully',
+    data: result,
   });
 });
 
@@ -68,6 +83,7 @@ export const BookController = {
   insertIntoDB,
   getAllFromDB,
   getByIdFromDB,
+  getBooksByCategory,
   updateIntoDB,
   deleteFromDB,
 };

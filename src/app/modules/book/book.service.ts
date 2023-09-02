@@ -3,6 +3,7 @@ import { Book, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import {
@@ -134,6 +135,40 @@ const getAllFromDB = async (
   };
 };
 
+const getBooksByCategory = async (
+  categoryId: string,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Book[] | null>> => {
+  const { page, size, skip } = paginationHelpers.calculatePagination(options);
+
+  const result = await prisma.book.findMany({
+    where: {
+      categoryId,
+    },
+    skip,
+    take: size,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            createdAt: 'desc',
+          },
+  });
+
+  const total = await prisma.book.count();
+
+  return {
+    meta: {
+      page,
+      size,
+      total,
+    },
+    data: result,
+  };
+};
+
 const getByIdFromDB = async (id: string): Promise<any> => {
   const result = await prisma.book.findUnique({
     where: {
@@ -178,6 +213,7 @@ const deleteFromDB = async (id: string): Promise<Book> => {
 export const BookService = {
   insertIntoDB,
   getAllFromDB,
+  getBooksByCategory,
   getByIdFromDB,
   updateIntoDB,
   deleteFromDB,

@@ -11,6 +11,7 @@ router.post(
   auth(ENUM_USER_ROLE.ADMIN),
   BookController.insertIntoDB
 );
+router.get('/:categoryId/category', BookController.getBooksByCategory);
 router.get('/', BookController.getAllFromDB);
 router.get('/:id', BookController.getByIdFromDB);
 router.patch('/:id', auth(ENUM_USER_ROLE.ADMIN), BookController.updateIntoDB);
