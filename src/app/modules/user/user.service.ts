@@ -68,7 +68,7 @@ const getAllFromDB = async (
       name: true,
       email: true,
       role: true,
-      contactNo: true,
+      password: true,
       address: true,
       profileImg: true,
       createdAt: true,
@@ -134,12 +134,13 @@ const updateIntoDB = async (
   return result;
 };
 
-const deleteFromDB = async (id: string): Promise<User> => {
-  const result = await prisma.user.delete({
+const deleteFromDB = async (id: string): Promise<any> => {
+  const { password, ...result } = await prisma.user.delete({
     where: {
       id,
     },
   });
+  console.log(password);
   return result;
 };
 

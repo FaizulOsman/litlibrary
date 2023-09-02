@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '@prisma/client';
-import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
@@ -10,18 +9,18 @@ import prisma from '../../../shared/prisma';
 import { IUserLogin, IUserLoginResponse } from './auth.interface';
 
 const signUp = async (payload: User): Promise<any> => {
-  // Hash the password before saving it in the database
-  const hashedPassword = await bcrypt.hash(payload.password, 10); // Adjust the salt rounds as needed
+  // // Hash the password before saving it in the database
+  // const hashedPassword = await bcrypt.hash(payload.password, 10); // Adjust the salt rounds as needed
 
-  const userDataWithHashedPassword = {
-    ...payload,
-    password: hashedPassword,
-  };
+  // const userDataWithHashedPassword = {
+  //   ...payload,
+  //   password: hashedPassword,
+  // };
 
-  const { password, ...result } = await prisma.user.create({
-    data: userDataWithHashedPassword,
-  });
-  // const { password, ...result } = await prisma.user.create({ data: payload });
+  // const { password, ...result } = await prisma.user.create({
+  //   data: userDataWithHashedPassword,
+  // });
+  const { password, ...result } = await prisma.user.create({ data: payload });
   console.log(password);
 
   const now = Math.floor(Date.now() / 1000); // Current time in seconds
@@ -56,30 +55,29 @@ const signUp = async (payload: User): Promise<any> => {
 };
 
 const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
-  const user = await prisma.user.findUnique({
-    where: { email: payload.email },
-  });
+  const { email, password } = payload;
+  const isUserExist = await prisma.user.findUnique({ where: { email } });
 
-  if (!user) {
+  if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   // Verify the password
-  const isPasswordMatch = await bcrypt.compare(payload.password, user.password);
-
-  if (!isPasswordMatch) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid password');
+  if (isUserExist?.password && password !== isUserExist.password) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'password is incorrect');
   }
 
   const now = Math.floor(Date.now() / 1000); // Current time in seconds
   const oneYearInSeconds = 31536000; // Number of seconds in one year
   const iatForOneYear = now + oneYearInSeconds; // Calculate the iat value for one year from now
 
+  const { id, role } = isUserExist;
+
   // Generate JWT tokens
   const accessToken = jwtHelpers.createToken(
     {
-      role: user.role,
-      userId: user.id,
+      role: role,
+      userId: id,
       iat: iatForOneYear,
     },
     config.jwt.secret as Secret,
@@ -88,8 +86,8 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
 
   const refreshToken = jwtHelpers.createToken(
     {
-      role: user.role,
-      userId: user.id,
+      role: role,
+      userId: id,
       iat: iatForOneYear,
     },
     config.jwt.refresh_secret as Secret,
@@ -97,7 +95,7 @@ const login = async (payload: IUserLogin): Promise<IUserLoginResponse> => {
   );
 
   return {
-    userData: user,
+    userData: isUserExist,
     accessToken,
     refreshToken,
   };
